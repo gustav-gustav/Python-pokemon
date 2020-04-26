@@ -4,16 +4,21 @@ from bag import Bag
 import random
 
 class Trainer:
-    def __init__(self, name: str, pokemon: str=None):
+    '''
+    Trainer
+    --------
+    '''
+    def __init__(self, name: str, *pokemons: tuple):
         self.name = name.capitalize()
         self.bag = Bag()
-        self.pokemons = PokemonList(Pokemon(random.choice(['bulbasaur', 'charmander', 'squirtle', 'pikachu']) if not pokemon else pokemon, level=5))
+        self.pokemons = PokemonList(*(Pokemon(pokemon, level=5) for pokemon in pokemons) if pokemons else Pokemon(random.choice(['bulbasaur', 'charmander', 'squirtle', 'pikachu']), level=5))
+        self.in_battle = False
 
     def __str__(self):
-        return f'<{self.__class__.__name__} {self.name} - {[repr(pokemon) for pokemon in self.pokemons]}>'
+        return f'<{self.__class__.__name__} {self.name} - {[pokemon for pokemon in self.pokemons]}>'
 
     def __repr__(self):
-        return f'<class {self.__class__.__name__} {self.name}>'
+        return f'<class {self.__class__.__name__}({self.name!r}, {", ".join([repr(name) for name in self.pokemons.names])})>'
 
     def battle(self, other):
         def catch(self, pokemon):
@@ -39,7 +44,6 @@ class Trainer:
 
 
 if __name__ == '__main__':
-    from client import client
-    ash = Trainer('Ash', 'charmander')
-    ash.pickup(client.get_item('tm01'))
-    ash.teach(client.get_item('tm01'), 'Charmander')
+    # from client import client
+    # ash = Trainer('Ash', 'charmander', 'squirtle', 'bulbasaur', 'pikachu')
+    pass
