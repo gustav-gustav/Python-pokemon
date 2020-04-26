@@ -1,4 +1,5 @@
 from client import client
+import re
 
 
 class Bag:
@@ -25,8 +26,10 @@ class Bag:
         pocket = getattr(self, pocket_name)
         if pocket_name == 'machines':
             item_from_pocket = pocket.use(item)
-            machine = client.get_machine(pocket.use(item).name)
-            return client.get_move(machine.move.name)
+            if item_from_pocket:
+                effect = item_from_pocket.effect_entries[0].effect
+                move = re.search(r'(?<=Teaches )(.*)(?= to a compatible Pokémon\.)', effect)[0].lower().replace(' ', '-')
+                return client.get_move(move)
 
     def discard(self, item: object, amount: int):
         pocket = getattr(self, self.get_pocket(item))
@@ -99,7 +102,7 @@ class Pocket:
             print(f"Item {item.name} is not in pocket")
             return None
 
-    def use(self, item: object, pokemon: object):
+    def use(self, item: object):
         item_from_pocket = self.get(item)
         if item_from_pocket:
             item_from_pocket.count -= 1
