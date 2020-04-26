@@ -9,7 +9,7 @@ class PokemonList:
             self.add(pokemon)
 
     def __str__(self):
-        return f'<class {self.__class__.__name__}>'
+        return f'<class {self.__class__.__name__} {[pokemon for pokemon in self]}>'
 
     def __repr__(self):
         return f'<class {self.__class__.__name__}>'
