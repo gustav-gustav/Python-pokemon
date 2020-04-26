@@ -4,10 +4,10 @@ from bag import Bag
 import random
 
 class Trainer:
-    def __init__(self, name):
+    def __init__(self, name: str, pokemon: str=None):
         self.name = name.capitalize()
         self.bag = Bag()
-        self.pokemons = PokemonList(Pokemon(random.choice(['bulbasaur', 'charmander', 'squirtle', 'pikachu']), level=5))
+        self.pokemons = PokemonList(Pokemon(random.choice(['bulbasaur', 'charmander', 'squirtle', 'pikachu']) if not pokemon else pokemon, level=5))
 
     def __str__(self):
         return f'<{self.__class__.__name__} {self.name} - {[repr(pokemon) for pokemon in self.pokemons]}>'
@@ -22,13 +22,16 @@ class Trainer:
         def throw_pokeball(self, pokeball):
             pass
 
-    def teach(self, machine, pokemon):
-        pokemon.learn(machine)
+    def teach(self, machine: object, pokemon_name: str):
+        pokemon = self.pokemons[pokemon_name]
+        pokemon.learn(self.bag.use(machine))
 
-    def give(self, item, pokemon):
+    def give(self, item: object, pokemon_name: str):
+        pokemon = self.pokemons[pokemon_name]
         pokemon.held_item = self.bag.use(item)
 
-    def use_item(self, item,  pokemon):
+    def use_item(self, item: object,  pokemon_name: str):
+        pokemon = self.pokemons[pokemon_name]
         pokemon.use(self.bag.use(item))
 
     def pickup(self, item):
@@ -36,5 +39,7 @@ class Trainer:
 
 
 if __name__ == '__main__':
-    ash = Trainer('Ash')
-    print(ash)
+    from client import client
+    ash = Trainer('Ash', 'charmander')
+    ash.pickup(client.get_item('tm01'))
+    ash.teach(client.get_item('tm01'), 'Charmander')
