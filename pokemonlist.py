@@ -23,12 +23,18 @@ class PokemonList:
     def __len__(self) -> int:
         return len(self.deque)
 
-    def __getitem__(self, name: str) -> list:
+    def __getitem__(self, identifier) -> list:
         '''Returns item from self.deque if item.name is in self.names'''
-        if name in self.names:
-            return self.deque[self.names.index(name)]
+        if type(identifier) is int:
+            if identifier in range(-len(self), len(self)-1) or identifier == 0:
+                return self.deque[identifier]
+            else:
+                raise IndexError(f'identifier {identifier!r} out of range of len({len(self)})')
         else:
-            return None
+            if identifier in self.names:
+                return self.deque[self.names.index(identifier)]
+            else:
+                raise ValueError(f'identifier {identifier!r} not in {self!r}')
 
     def add(self, pokemon: object, index: int=-1) -> None:
         '''Adds a Pokemon to self.deque if there is space available'''
