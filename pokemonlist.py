@@ -39,8 +39,10 @@ class PokemonList:
     def add(self, pokemon: object, index: int=-1) -> None:
         '''Adds a Pokemon to self.deque if there is space available'''
         if len(self.deque) < self.maxlen:
-            if index in range(-1, 6):
+            if index in range(0, len(self)):
                 self.deque.insert(index, pokemon)
+            elif index == -1:
+                self.deque.append(pokemon)
             else:
                 print(f'Position out of range: {index}')
         else:
@@ -60,3 +62,18 @@ class PokemonList:
     def names(self) -> list:
         '''Returns a list of pokemon names from self.deque'''
         return [pokemon.name for pokemon in self.deque]
+
+
+if __name__ == '__main__':
+    '''debugging'''
+    from pokemon import Pokemon
+    from math import floor
+    from random import randint
+    level = 20
+    pokemons = PokemonList(*(Pokemon(pokemon, level=randint(floor(level*0.9), floor(level*1.1)))
+                             for pokemon in ['bulbasaur', 'charmander', 'squirtle', 'pikachu']))
+    print(repr(pokemons))
+    pokemons.move(0, -1)
+    print(repr(pokemons))
+    pokemons.move(0, -1)
+    print(repr(pokemons))
