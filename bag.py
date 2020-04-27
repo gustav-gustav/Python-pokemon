@@ -77,6 +77,9 @@ class Pocket:
     def __len__(self):
         return len(set(self.names))
 
+    def __iter__(self) -> iter:
+        return iter(self.items)
+
     def add(self, item: object) -> None:
         '''Adds an item to self.items'''
         if len(self.items) < self.maxlen:
