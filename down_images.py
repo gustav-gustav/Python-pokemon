@@ -22,11 +22,7 @@ async def main():
         await asyncio.gather(*download_tasks)
 
 async def download(sema, session, url):
-    '''
-    Makes async http requests and parses it with BeautifulSoup
-    Download's the image that the first endpoint matched.
-    If request fails, retries it in the excepion catch
-    '''
+    '''Download's sprites'''
     async with sema:
         start = perf_counter()
         filename = url.split('/')[-1]
@@ -40,8 +36,7 @@ async def download(sema, session, url):
 
 def printer(status, url_path, start):
     '''Wraps the async response with usefull debugging stats'''
-    print(
-        f"{strftime('[%d/%m/%Y %H:%M:%S]')} {status}@{url_path!r} finished in {(perf_counter() - start):.2f}")
+    print(f"{strftime('[%d/%m/%Y %H:%M:%S]')} {status}@{url_path!r} finished in {(perf_counter() - start):.2f}")
 
 
 if __name__ == '__main__':
