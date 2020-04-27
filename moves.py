@@ -8,9 +8,14 @@ class Moves:
         self.pokemon = pokemon
         self.maxlen = 4
         self.q = deque(maxlen=self.maxlen)
+        self.available_moves = [m.move.name for m in self.pokemon.pokemon.moves]
         if moveset:
-            for move in moveset:
-                self.add(move, printer=False)
+            if self.pokemon.evolves_from:
+                for move in moveset:
+                    self.q.append(move)
+            else:
+                for move in moveset:
+                    self.add(move, printer=False)
         else:
             learned = [move for move in self.pokemon.pokemon.moves if move.version_group_details[0].move_learn_method.name == "level-up"]
             lower_than_level = [move.move.name for move in learned if move.version_group_details[0].level_learned_at <= self.pokemon.level]
@@ -40,12 +45,11 @@ class Moves:
 
     def add(self, move, index=-1, printer=True):
         # move list for all learnable moves
-        pkm_mvlist = [m.move.name for m in self.pokemon.pokemon.moves]
-        if move in pkm_mvlist:
+        if move in self.available_moves:
             # checks if move is already in moveset
-            if move not in [move.name for move in self.list]:
+            if move not in self.names:
                 # index for selected move in learnable list
-                move_index = [i for i, mv in enumerate(pkm_mvlist) if mv == move][0]
+                move_index = [i for i, mv in enumerate(self.available_moves) if mv == move][0]
                 # checks if required level is  satisfied
                 if self.pokemon.level >= self.pokemon.pokemon.moves[move_index].version_group_details[0].level_learned_at:
                     if len(self.q) < self.maxlen:
@@ -65,7 +69,7 @@ class Moves:
                             self.remove(self.list[index].name)
                             self.add(move, index=index)
                         else:
-                            print(f"{self.name} didn't learn {move}")
+                            print(f"{self.pokemon.name} didn't learn {move}")
                 else:
                     print(f"{self.pokemon.name}'s level is too low to learn {move}")
             else:
