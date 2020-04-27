@@ -9,10 +9,10 @@ class PokemonList:
             self.add(pokemon)
 
     def __str__(self) -> str:
-        return f'<class {self.__class__.__name__} {[pokemon for pokemon in self]}>'
+        return f'<class {self.__class__.__name__} {[str(pokemon) for pokemon in self]}>'
 
     def __repr__(self) -> str:
-        return f'<class {self.__class__.__name__}>'
+        return f'<class {self.__class__.__name__}({", ".join([repr(pokemon) for pokemon in self])})>'
 
     def __iter__(self) -> iter:
         return iter(self.deque)
