@@ -18,7 +18,7 @@ class Trainer:
         self.in_battle = False
 
     def __str__(self):
-        return f'<{self.__class__.__name__} {self.name} - {[pokemon for pokemon in self.pokemons]}>'
+        return f'<{self.__class__.__name__} {self.name}>'
 
     def __repr__(self):
         return f'<class {self.__class__.__name__}({self.name!r}, {", ".join([repr(name) for name in self.pokemons.names])})>'
