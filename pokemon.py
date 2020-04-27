@@ -106,10 +106,10 @@ class Pokemon:
         self.abilities = self.pokemon.abilities
 
     def __str__(self):
-        return f"<{self.__class__.__name__} {self.name} - {self.moveset.names}>"
+        return f"<{self.__class__.__name__} {self.name}|Lv.{self.level}|Moves.{self.moveset.names}>"
 
     def __repr__(self):
-        return f'<{self.__class__.__name__} {self.name}>'
+        return f'<{self.__class__.__name__} {self.name}|Lv.{self.level}>'
 
     def map_by_level(self, name: str):
         '''Called when pokemon is created or when level-up'''
@@ -159,7 +159,7 @@ class Pokemon:
     def use(self, item):
         if item.category.name == 'evolution':
             self.used_item = item.name
-            self.evolve(trigger='item')
+            self.evolve(trigger='use-item')
 
     def learn(self, move):
         '''Adds move to self.moveset'''
@@ -173,7 +173,6 @@ class Pokemon:
                 requirements = self.evolves_to[evolution]
                 if requirements['trigger'] == trigger:
                     for condition in requirements:
-                        print(condition)
                         if condition == 'min_level':
                             if self.level >= requirements['min_level']:
                                 conditions.append(True)
@@ -194,7 +193,8 @@ class Pokemon:
                         else:
                             print('unhandled: ', condition, requirements[condition])
 
-                if all(conditions):
+                if all(conditions) and conditions:
+                    name = self.name
                     print(f"{self.name} is evolving")
                     for _ in range(3):
                         print('.  ', end='\r')
@@ -204,7 +204,10 @@ class Pokemon:
                         print('...', end='\r')
                         time.sleep(0.25)
                     self.__init__(name=evolution, evolves_from=self)
-                    print(f"{self.name} evolved into {evolution.capitalize()}")
+                    print(f"{name} evolved into {self.name}")
+                    for move in self.pokemon.moves:
+                        if self.level == move.version_group_details[0].level_learned_at:
+                            self.learn(move.move.name)
                     break
 
     def get_evolution(self, chain):
@@ -276,9 +279,6 @@ class Pokemon:
 
 
 if __name__ == '__main__':
-    # poke1 = Pokemon('poliwhirl', level=20)
-    # poke1.held_item = 'kings-rock'
-    # poke1.evolve(trigger='trade')
-    # poke1.levelup()
-    # poke1.use(client.get_item(84))
-    pass
+    poke1 = Pokemon('poliwhirl', level=47)
+    poke1.use(client.get_item('water-stone'))
+    print(poke1)
