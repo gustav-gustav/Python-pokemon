@@ -54,9 +54,17 @@ class PokemonList:
         self.deque.remove(pokemon)
         return pokemon
 
-    def move(self, name: str, position: int) -> None:
+    def move(self, name1: str, name2: str) -> None:
         '''Moves a pokemon to a given position in self.deque'''
-        self.add(self.pop(name), index=position)
+        index1 = self.index(name1)
+        index2 = self.index(name2)
+        max_index = max(index1, index2)
+        min_index = min(index1, index2)
+        self.add(self.pop(max_index), index=min_index)
+        self.add(self.pop(min_index), index=max_index)
+
+    def index(self, name:str) -> int:
+        return self.deque.index(name)
 
     @property
     def names(self) -> list:

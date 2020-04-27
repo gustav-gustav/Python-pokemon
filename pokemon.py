@@ -29,9 +29,9 @@ class Pokemon:
     evolution trigger                               ok      \n
     affection                                       not ok  \n
     attacks that apply stats                        not ok  \n
-    moveset based on machine                        not ok  \n
     item held                                       ok      \n
     moveset based on level                          ok      \n
+    moveset based on machine                        ok      \n
     learn new move                                  ok      \n
 
     battle mechanic:
@@ -73,7 +73,7 @@ class Pokemon:
         # chain of evolution with requirements based on item, level or condition
         self.evolves_to = self.get_evolution(self.evolution_chain)
         # adds moves to the moveset
-        self.moveset = Moves(self, moveset if not evolves_from else evolves_from.moveset.list)
+        self.moveset = Moves(self, moveset if not evolves_from else evolves_from.moveset)
         # gets type effectiveness against self
         self.type_defense = type_defense(name=self.pokemon.name, debug=False)
         for stat in self.pokemon.stats:
@@ -232,7 +232,7 @@ class Pokemon:
             evolutions = None
         return evolutions
 
-    def attack_poke(self, attack, other):
+    def attack_poke(self, attack: str, other: "Pokemon"):
         if (self.state != 'fainted' or self.state != 'asleep') and other.state != 'fainted':
             attack = self.moveset.use(attack)
             if attack:
@@ -279,6 +279,7 @@ class Pokemon:
 
 
 if __name__ == '__main__':
-    poke1 = Pokemon('poliwhirl', level=47)
-    poke1.use(client.get_item('water-stone'))
-    print(poke1)
+    poke1 = Pokemon('bulbasaur', level=20, moveset=['razor-leaf'])
+    poke2 = Pokemon('charmander', level=20)
+    poke1.attack_poke('razor-leaf', poke2)
+    print(poke2.hp)
