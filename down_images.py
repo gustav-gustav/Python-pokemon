@@ -12,14 +12,16 @@ async def main():
             table = soup.find('table', attrs={'id': 'pokedex'})
             images = (image['data-src'] for image in table.findAll('span', attrs={'class': 'img-fixed icon-pkmn'}))
 
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0'}
-    download_tasks = []
-    sema_count = 100
-    sema = asyncio.Semaphore(sema_count)
-    async with ClientSession(headers=headers) as session:
-        for image_endpoint in images:
-            download_tasks.append(download(sema, session, image_endpoint))
-        await asyncio.gather(*download_tasks)
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0'}
+            download_tasks = []
+            sema_count = 100
+            sema = asyncio.Semaphore(sema_count)
+            async with ClientSession(headers=headers) as session:
+                for image_endpoint in images:
+                    download_tasks.append(download(sema, session, image_endpoint))
+                await asyncio.gather(*download_tasks)
+        else:
+            response.raise_for_status()
 
 async def download(sema, session, url):
     '''Download's sprites'''
